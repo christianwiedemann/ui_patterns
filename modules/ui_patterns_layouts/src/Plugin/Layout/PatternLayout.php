@@ -7,6 +7,7 @@ use Drupal\Core\Layout\LayoutDefault;
 use Drupal\Core\Layout\LayoutDefinition;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
+use Drupal\ui_patterns\Form\PatternDisplayFormTrait;
 use Drupal\ui_patterns\UiPatternsManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -16,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @package Drupal\ui_patterns_layouts\Plugin\Layout
  */
 class PatternLayout extends LayoutDefault implements PluginFormInterface, ContainerFactoryPluginInterface {
-
+  use PatternDisplayFormTrait;
   /**
    * Pattern manager service.
    *
@@ -82,10 +83,10 @@ class PatternLayout extends LayoutDefault implements PluginFormInterface, Contai
    */
   public function defaultConfiguration() {
     return parent::defaultConfiguration() + [
-      'pattern' => [
-        'field_templates' => 'default',
-      ],
-    ];
+        'pattern' => [
+          'field_templates' => 'default',
+        ],
+      ];
   }
 
   /**
@@ -114,7 +115,13 @@ class PatternLayout extends LayoutDefault implements PluginFormInterface, Contai
       ]),
       '#default_value' => $configuration['pattern']['field_templates'],
     ];
-
+    $pattern = $this->getPluginDefinition()->get('additional')['pattern'];
+    $defaults = [];
+    $config = $this->getConfiguration();
+    if (isset($config['pattern']['settings'])) {
+      $defaults = $config['pattern']['settings'];
+    }
+    $this->buildPatternSettingForm($form['pattern'], $pattern, $defaults);
     return $form;
   }
 
