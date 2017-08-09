@@ -122,12 +122,23 @@ class FieldTemplateProcessor implements FieldTemplateProcessorInterface {
    *    Pattern context.
    */
   protected function getContext() {
+
+    // Preprocess settings
+    $ui_pattern_settings = isset($this->variables['ds-config']['settings']) ? $this->variables['ds-config']['settings'] : [];
+    $processed_settings = [];
+    if (isset($ui_pattern_settings['pattern'])) {
+      $pattern_id = $ui_pattern_settings['pattern'];
+      $settings = isset($ui_pattern_settings['settings']) ? $ui_pattern_settings['settings'] : [];
+      $processed_settings = \Drupal\ui_patterns\UiPatternsSettings::preprocess($pattern_id, $settings, isset($this->variables['element']['#object']) ? $this->variables['element']['#object'] : NULL);
+    }
+
     return [
       'type' => 'ds_field_template',
       'field_name' => $this->getFieldName(),
       'entity_type' => $this->variables['element']['#entity_type'],
       'bundle' => $this->variables['element']['#bundle'],
       'view_mode' => $this->variables['element']['#view_mode'],
+      'settings' => $processed_settings
     ];
   }
 
