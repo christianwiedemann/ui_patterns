@@ -5,8 +5,8 @@ namespace Drupal\ui_patterns_field_group\Plugin\field_group\FieldGroupFormatter;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\field_group\FieldGroupFormatterBase;
 use Drupal\ui_patterns\Form\PatternDisplayFormTrait;
-use Drupal\ui_patterns\UiPatternsSourceManager;
 use Drupal\ui_patterns\UiPatternsManager;
+use Drupal\ui_patterns\UiPatternsSourceManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -95,6 +95,7 @@ class PatternFormatter extends FieldGroupFormatterBase implements ContainerFacto
     $element['#context']['entity_type'] = $this->configuration['group']->entity_type;
     $element['#context']['bundle'] = $this->configuration['group']->bundle;
     $element['#context']['view_mode'] = $this->configuration['group']->mode;
+    $element['#context']['settings'] = isset($this->configuration['settings']['settings']) ? $this->configuration['settings']['settings'] : [];
 
     // Pass current entity to pattern context, if any.
     if (!empty($element['#fields'])) {
@@ -131,6 +132,10 @@ class PatternFormatter extends FieldGroupFormatterBase implements ContainerFacto
       ];
 
       $this->buildPatternDisplayForm($form, 'entity_display', $context, $this->configuration['settings']);
+      if (isset($this->configuration['settings']['pattern'])) {
+        $pattern_id = $this->configuration['settings']['pattern'];
+        $this->buildPatternSettingForm($form, $pattern_id, $this->configuration['settings']['settings']);
+      }
     }
     else {
       $form['message'] = [
