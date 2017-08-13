@@ -84,6 +84,9 @@ class PatternDefinition extends PluginDefinition implements DerivablePluginDefin
     foreach ($this->getFields() as $field) {
       $definition['fields'][$field->getName()] = $field->toArray();
     }
+    foreach ($this->getSettings() as $setting) {
+      $definition['settings'][$setting->getName()] = $setting->toArray();
+    }
     return $definition;
   }
 
