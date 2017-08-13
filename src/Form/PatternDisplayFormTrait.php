@@ -4,6 +4,8 @@ namespace Drupal\ui_patterns\Form;
 
 use Drupal\Component\Utility\SortArray;
 use Drupal\ui_patterns\Plugin\PatternSourceBase;
+use \Drupal\ui_patterns\UiPatternsSettings;
+use \Drupal\ui_patterns\UiPatterns;
 
 /**
  * Trait PatternDisplayFormTrait.
@@ -53,7 +55,6 @@ trait PatternDisplayFormTrait {
     }
   }
 
-
   /**
    * Build pattern settings form.
    *
@@ -62,10 +63,10 @@ trait PatternDisplayFormTrait {
    * @param string $pattern_id
    *    The pattern id for which to print the setting form for.
    * @param array $defaults
-   *    Default setting values
+   *    Default setting values.
    */
   public function buildPatternSettingForm(array &$form, $pattern_id, $defaults) {
-    $definition = \Drupal\ui_patterns\UiPatterns::getPatternDefinition($pattern_id);
+    $definition = UiPatterns::getPatternDefinition($pattern_id);
     $settings = $definition->getSettings();
     if (!empty($settings)) {
       foreach ($settings as $key => $setting) {
@@ -79,7 +80,7 @@ trait PatternDisplayFormTrait {
           ];
         }
         $value = isset($defaults[$key]) ? $defaults[$key] : NULL;
-        $settingType = \Drupal\ui_patterns\UiPatternsSettings::createSettingType($setting);
+        $settingType = UiPatternsSettings::createSettingType($setting);
         $form['settings'] += $settingType->buildConfigurationForm([], $value);
       }
 
@@ -187,7 +188,7 @@ trait PatternDisplayFormTrait {
       $weight = 0;
       uasort($settings['pattern_mapping'], [
         SortArray::class,
-        'sortByWeightElement'
+        'sortByWeightElement',
       ]);
       foreach ($settings['pattern_mapping'] as $key => $setting) {
         $settings['pattern_mapping'][$key]['weight'] = $weight++;

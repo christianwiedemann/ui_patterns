@@ -82,7 +82,8 @@ class PatternLayout extends LayoutDefault implements PluginFormInterface, Contai
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return parent::defaultConfiguration() + [
+    return parent::defaultConfiguration() +
+      [
         'pattern' => [
           'field_templates' => 'default',
         ],
